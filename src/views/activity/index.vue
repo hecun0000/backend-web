@@ -1,7 +1,16 @@
 <template>
   <div class="role common-table">
     <div class="handle-box">
-      <div class="handle-left"></div>
+      <div class="handle-left">
+        <el-form :inline="true" :model="searchForm" class="demo-form-inline">
+        <el-form-item label="活动名称">
+          <el-input v-model="searchForm.user" placeholder="请输入活动名称"></el-input>
+        </el-form-item>
+        <el-form-item>
+          <el-button type="primary" @click="onSubmit">查询</el-button>
+        </el-form-item>
+        </el-form>
+      </div>
       <div class="handle-right">
         <el-button type="primary" @click="handleAdd">新增</el-button>
         <el-button type="danger">批量删除</el-button>
@@ -17,7 +26,8 @@
         @selection-change="handleSelectionChange"
       >
         <el-table-column type="selection" width="55"></el-table-column>
-        <el-table-column prop="name" label="角色名称"></el-table-column>
+        <el-table-column prop="name" label="活动名称"></el-table-column>
+        <el-table-column prop="time" label="活动时间"></el-table-column>
         <el-table-column prop="content" label="描述"></el-table-column>
         <el-table-column label="操作">
           <template slot-scope="scope">
@@ -63,6 +73,10 @@ export default {
     this.getListData()
   },
   methods: {
+    onSubmit () {
+      console.log('搜索')
+      this.refresh()
+    },
     handleEdit (row) {
       this.$refs.ProductDialog.openDialog(row)
     },

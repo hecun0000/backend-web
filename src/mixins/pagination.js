@@ -69,6 +69,10 @@ export default {
       console.log(val, 'handleSizeChange')
       this.pageSize = val
       this.getListData()
+    },
+    refresh () {
+      this.currentPage = 1
+      this.getListData()
     }
   }
 }

@@ -31,9 +31,9 @@ Vue.use(Router)
 // 有权限路由
 export const asyncRoutes = [
   {
-    path: '/',
+    path: '/user',
     component: Layout,
-    redirect: '/index',
+    redirect: '/user/index',
     children: [
       {
         path: 'index',
@@ -73,7 +73,7 @@ export const asyncRoutes = [
 // 无权限路由
 export const constantRoutes = [
   {
-    path: '/login',
+    path: '/',
     name: 'login',
     hidden: true,
     component: () => import('@/views/login/login')

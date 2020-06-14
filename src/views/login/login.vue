@@ -88,7 +88,7 @@ export default {
     submitForm (formName) {
       this.$refs.form.validate(valid => {
         if (valid) {
-          this.$router.push({ name: 'dashboard' })
+          this.$router.push({ name: 'user' })
         } else {
           console.log('error submit!!')
           return false
