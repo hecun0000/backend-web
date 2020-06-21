@@ -34,14 +34,14 @@
             <img :src="scope.row.avatarUrl" alt="" class="avatar">
           </template>
         </el-table-column>
-        <el-table-column prop="nickname" label="昵称"></el-table-column>
+        <el-table-column prop="nickName" label="昵称"></el-table-column>
         <el-table-column prop="phone" label="手机号"></el-table-column>
         <el-table-column label="性别">
           <template slot-scope="scope">
             {{ scope.row.gender===1?"男":'女' }}
           </template>
         </el-table-column>
-        <el-table-column label="操作">
+        <el-table-column label="操作" width="150">
           <template slot-scope="scope">
             <el-button type="text" @click="handleCheck(scope.row)">查看优惠券</el-button>
           </template>
@@ -81,7 +81,6 @@ export default {
         nickname: '',
         phone: ''
       },
-      tableData: [],
       listApi: getUserList, // 列表请求地址
       multipleSelection: []
     }

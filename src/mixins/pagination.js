@@ -47,8 +47,7 @@ export default {
       this.loading = true
       const res = await this.listApi(data)
       this.loading = false
-      console.log(res)
-      this.tableData = res.records
+      this.tableData = res.data.records
     },
     /**
      *分页回调
