@@ -66,7 +66,15 @@ export const asyncRoutes = [
         component: () => import('@/views/activity/index'),
         name: 'activity',
         meta: { title: '活动管理', icon: 'dashboard' }
+      },
+      {
+        path: 'edit',
+        hidden: true,
+        component: () => import('@/views/activity/add'),
+        name: 'activityEdit',
+        meta: { title: '新建活动', icon: 'dashboard' }
       }
+
     ]
   }
 ]
