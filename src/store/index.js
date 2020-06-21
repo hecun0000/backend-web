@@ -10,7 +10,9 @@ const types = {
 }
 
 const state = {
-  groups: [1]
+  groups: [1],
+  appName: '后台管理系统',
+  logo: 'http://static.hecun.site/hecun.321c947a.jpg'
 }
 
 const mutations = {

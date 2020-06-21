@@ -53,7 +53,7 @@
 
 <script>
 import { pagination } from '@/mixins'
-import { getProductList } from '@/api/order/product'
+import { getActivityList } from '@/api/activity'
 import { ProductDialog } from './components'
 
 export default {
@@ -64,7 +64,7 @@ export default {
   mixins: [pagination], // 封装分页相关函数
   data () {
     return {
-      listApi: getProductList, // 列表请求地址
+      listApi: getActivityList, // 列表请求地址
       multipleSelection: [],
       searchForm: {}
     }

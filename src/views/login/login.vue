@@ -1,9 +1,9 @@
 <template>
   <div class="login">
     <div class="login-container">
-      <img src="http://static.hecun.site/hecun.321c947a.jpg" class="logo" alt="logo" />
+      <img :src="$store.getters.logo" class="logo" alt="logo" />
       <div>
-        <h2 class="title">XXX后台管理登录</h2>
+        <h2 class="title">{{$store.getters.appName}}</h2>
         <el-form
           :model="form"
           status-icon

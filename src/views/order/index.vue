@@ -10,21 +10,20 @@
   <div class="role common-table">
     <div class="code-box">
       <div>
-
-      <el-input class="code-input" v-model="code" placeholder="请输入核销码"></el-input>
-      <el-button type="primary" @click="handleCode">核销</el-button>
+        <el-input class="code-input" v-model="code" placeholder="请输入核销码"></el-input>
+        <el-button type="primary" @click="handleCode">核销</el-button>
       </div>
     </div>
     <div class="handbox">
       <el-form :inline="true" :model="searchForm" class="demo-form-inline">
         <el-form-item label="手机号">
-          <el-input v-model="searchForm.user" placeholder="请输入手机号"></el-input>
+          <el-input v-model="searchForm.phone" placeholder="请输入手机号"></el-input>
         </el-form-item>
         <el-form-item label="昵称">
           <el-input v-model="searchForm.nickname" placeholder="请输入昵称"></el-input>
         </el-form-item>
         <el-form-item label="订单号">
-          <el-input v-model="searchForm.nickname" placeholder="请输入订单号"></el-input>
+          <el-input v-model="searchForm.id" placeholder="请输入订单号"></el-input>
         </el-form-item>
         <el-form-item>
           <el-button type="primary" @click="onSubmit">查询</el-button>
@@ -42,17 +41,16 @@
         <el-table-column type="selection" width="55"></el-table-column>
         <el-table-column prop="avatar" label="头像">
           <template slot-scope="scope">
-            <img :src="scope.row.avatar" alt="" class="avatar">
+            <img :src="scope.row.avatarUrl" alt="" class="avatar">
           </template>
         </el-table-column>
-        <el-table-column prop="orderNum" label="订单号"></el-table-column>
-        <el-table-column prop="orderNum" label="核销码"></el-table-column>
+        <el-table-column prop="id" label="订单号"></el-table-column>
+        <!-- <el-table-column prop="orderNum" label="核销码"></el-table-column> -->
         <el-table-column prop="nickname" label="昵称"></el-table-column>
         <el-table-column prop="phone" label="手机号"></el-table-column>
         <el-table-column label="操作">
           <template slot-scope="scope">
-            <el-button type="text" @click="handleCheck(scope.row)">查看</el-button>
-            <el-button type="text" @click="handleEdit(scope.row)">编辑</el-button>
+            <el-button type="text" @click="handleCheck(scope.row)">查看成员</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -73,7 +71,7 @@
 
 <script>
 import { pagination } from '@/mixins'
-import { getProductList } from '@/api/order/product'
+import { getOrderList } from '@/api/order'
 import { ProductDialog } from './components'
 
 export default {
@@ -86,10 +84,11 @@ export default {
     return {
       code: '',
       searchForm: {
-        user: '',
-        region: ''
+        nickname: '',
+        phone: '',
+        id: ''
       },
-      listApi: getProductList, // 列表请求地址
+      listApi: getOrderList, // 列表请求地址
       multipleSelection: []
     }
   },
@@ -100,12 +99,6 @@ export default {
     onSubmit () {
       console.log('搜索')
       this.refresh()
-    },
-    handleEdit (row) {
-      this.$refs.ProductDialog.openDialog(row)
-    },
-    handleAdd () {
-      this.$refs.ProductDialog.openDialog()
     },
     handleCheck (row) {
       this.$refs.ProductDialog.openDialog(row, 'check')
@@ -131,5 +124,6 @@ export default {
 .code-box {
   display: flex;
   justify-content: center;
+  margin-bottom: 20px;
 }
 </style>

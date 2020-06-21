@@ -6,7 +6,7 @@
  */
 
 const dev = {
-  baseUrl: '/api',
+  baseUrl: '/',
   routerMode: 'hash'
 }
 

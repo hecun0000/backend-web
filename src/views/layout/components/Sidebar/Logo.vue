@@ -24,8 +24,8 @@ export default {
   },
   data () {
     return {
-      title: 'vue_template',
-      logo: 'http://static.hecun.site/hecun.321c947a.jpg'
+      title: this.$store.getters.appName,
+      logo: this.$store.getters.logo
     }
   }
 }

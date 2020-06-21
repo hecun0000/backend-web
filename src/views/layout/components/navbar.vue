@@ -13,19 +13,19 @@
 
       <el-dropdown class="avatar-container right-menu-item hover-effect" trigger="click">
         <div class="avatar-wrapper">
-          <img src="http://static.hecun.site/hecun.321c947a.jpg" class="user-avatar">
+          <img :src="$store.getters.logo" class="user-avatar">
           <i class="el-icon-caret-bottom"/>
         </div>
         <el-dropdown-menu slot="dropdown">
           <!-- <router-link to="/profile/index">
             <el-dropdown-item>Profile</el-dropdown-item>
           </router-link> -->
-          <router-link to="/">
+          <!-- <router-link to="/">
             <el-dropdown-item>修改密码</el-dropdown-item>
           </router-link>
           <router-link to="/">
             <el-dropdown-item>关于系统</el-dropdown-item>
-          </router-link>
+          </router-link> -->
           <el-dropdown-item divided>
             <span style="display:block;" @click="logout">退出登录</span>
           </el-dropdown-item>

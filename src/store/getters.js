@@ -1,5 +1,7 @@
 const getters = {
   getGroups: state => state.groups,
+  appName: state => state.appName,
+  logo: state => state.logo,
   sidebarCollapse: state => state.app.sidebarCollapse,
   sidebar: state => state.app.sidebar,
   size: state => state.app.size,

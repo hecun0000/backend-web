@@ -16,3 +16,5 @@ export function logout () {
   return request.post('/user/logout'
   )
 }
+
+export const getUserList = data => request.get('/user-info/page', data)

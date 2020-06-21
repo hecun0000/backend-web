@@ -41,14 +41,14 @@ export default {
       const params = this.listApiParmas ? this.listApiParmas : this.searchForm
       const data = {
         current: this.currentPage,
-        pageSize: this.pageSize,
+        size: this.pageSize,
         ...params
       }
       this.loading = true
       const res = await this.listApi(data)
       this.loading = false
       console.log(res)
-      this.tableData = res.items
+      this.tableData = res.records
     },
     /**
      *分页回调
