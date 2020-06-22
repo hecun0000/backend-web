@@ -47,6 +47,14 @@
         <el-form-item label="活动详情" prop="desc">
           <quill @getEditorHtml="getEditorHtml" />
         </el-form-item>
+        <el-form-item label="讨论问答" prop="desc">
+          <ul class="task-box">
+            <li class="task-item" v-for="(item, index) of form.tasks" :key="index">
+              <el-input></el-input>
+              <el-input type="textarea"></el-input>
+            </li>
+          </ul>
+        </el-form-item>
         <el-form-item>
             <el-button type="primary" @click="handleSave">保 存</el-button>
             <el-button @click="handleCancel">取 消</el-button>
@@ -72,6 +80,7 @@ export default {
       title: '编辑角色',
       visible: false,
       form: {
+        tasks: [],
         title: '',
         time: [],
         type: '',
