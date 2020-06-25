@@ -6,6 +6,7 @@
  */
 
 const dev = {
+  hostUrl: 'http://118.24.22.88:8888/',
   baseUrl: '/',
   routerMode: 'hash'
 }

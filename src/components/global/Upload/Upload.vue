@@ -9,6 +9,7 @@
 <script>
 import { Loading } from 'element-ui'
 import { uploadFile } from '@/api/activity'
+import env from '@/utils/env'
 
 export default {
   name: 'Upload',
@@ -30,8 +31,15 @@ export default {
     async beforeUpload (file) {
       Loading.service({ fullscreen: true, text: '图片上传中' })
       const data = new FormData()
-      data.append('image', file)
+      data.append('photo', file)
       const res = await uploadFile(data)
+      console.log(res)
+      Loading.service({}).close()
+      if (res.code === 200) {
+        const url = '/images/' + res.data.path
+        this.imageUrl = env.hostUrl + url
+        this.$emit('getImgUrl', this.imageUrl)
+      }
       console.log(file, res)
     },
     handleError () {
