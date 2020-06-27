@@ -7,51 +7,49 @@
           <el-input v-model="form.title"></el-input>
         </el-form-item>
         <el-form-item label="活动封面" prop="region">
-          <upload @getImgUrl="getImgUrl"></upload>
+          <upload @getImgUrl="getImgUrl" ref="upload"></upload>
         </el-form-item>
         <el-form-item label="活动时间" prop="delivery">
           <el-date-picker
-            v-model="form.time"
-            type="datetimerange"
-            range-separator="至"
-            start-placeholder="开始日期"
-            end-placeholder="结束日期"
+            v-model="form.endDate"
+            type="datetime"
+            value-format="yyyy-MM-dd HH:mm:ss"
+            placeholder="选择日期时间"
           ></el-date-picker>
         </el-form-item>
         <el-form-item label="活动类型" prop="type">
           <el-radio-group v-model="form.type">
-            <el-radio label="拼团" value="group"></el-radio>
-            <el-radio label="助力" value="share"></el-radio>
+            <el-radio label="group">拼团</el-radio>
+            <el-radio label="share">助力</el-radio>
           </el-radio-group>
         </el-form-item>
         <el-form-item label="原价" prop="original_price">
           <el-input-number v-model="form.originalPrice" label="原价"></el-input-number>
         </el-form-item>
-        <el-form-item label="现价" prop="type">
+        <el-form-item label="现价">
           <el-input-number v-model="form.activityPrice" label="现价"></el-input-number>
         </el-form-item>
-        <el-form-item label="成团人数" prop="desc" v-if="form.type === 'group'">
+        <el-form-item label="成团人数" v-if="form.type === 'group'">
           <el-input-number v-model="form.teamCount" label="成团人数"></el-input-number>
         </el-form-item>
 
-          <el-form-item label="活动详情" prop="desc">
-          <quill @getEditorHtml="getEditorHtml" />
+        <el-form-item label="活动详情" prop="desc">
+          <quill @getEditorHtml="getEditorHtml" :editDetail="editDetail" />
         </el-form-item>
         <el-form-item>
-            <el-button type="primary" @click="handleSave">保 存</el-button>
-            <el-button @click="handleCancel">取 消</el-button>
+          <el-button type="primary" @click="handleSave">保 存</el-button>
+          <el-button @click="handleCancel">取 消</el-button>
           <!-- <quill @getEditorHtml="getEditorHtml" /> -->
         </el-form-item>
       </el-form>
     </div>
-    <div>
-    </div>
+    <div></div>
   </div>
 </template>
 <script>
 import quill from './components/quill'
 // import uploadImgs from './components/uploadImgs'
-import { addActivity, editActivity } from '@/api/activity'
+import { addActivity, editActivity, getAtivityById } from '@/api/activity'
 import { deepCopy } from '@/utils/tools'
 export default {
   name: 'ProductDialog',
@@ -66,26 +64,39 @@ export default {
       form: {
         headImg: '',
         title: '',
-        time: [],
+        endDate: '',
         type: '',
         originalPrice: 0,
         activityPrice: 0,
         teamCount: 0,
         detail: ''
       },
+      editDetail: '',
       rules: {
         title: [{ required: true, message: '请输入活动名称', trigger: 'blur' }]
         // originalPrice: [{ required: true, message: '请输入活动名称', trigger: 'blur' }],
         // title: [{ required: true, message: '请输入活动名称', trigger: 'blur' }],
         // title: [{ required: true, message: '请输入活动名称', trigger: 'blur' }],
-
       }
     }
   },
   mounted () {
     this.init()
+    console.log(this.$route)
+    this.id = this.$route.query.id
+    if (this.id) {
+      this.getDetail(this.id)
+    }
   },
   methods: {
+    async getDetail (id) {
+      const res = await getAtivityById(id)
+      if (res.code === 200) {
+        this.form = res.data
+        this.editDetail = res.data.detail
+        this.$refs.upload.imageUrl = res.data.headImg
+      }
+    },
     getImgUrl (url) {
       console.log(url)
       this.form.headImg = url
@@ -118,8 +129,6 @@ export default {
     },
     async handleSave () {
       const data = deepCopy(this.form)
-      data.startTime = this.form.time[0]
-      data.endTime = this.form.time[1]
       let res
       if (this.$route.query && this.$route.query.id) {
         data.id = this.$route.query.id
@@ -159,7 +168,7 @@ export default {
   border-top: 1px solid #eee;
 }
 
-.item-box  {
+.item-box {
   display: flex;
   .left {
     width: 600px;

@@ -56,12 +56,14 @@ export default {
       }, headers)
     })
   },
-  delete (url, param = null, headers = {}) {
+  delete (url, params = null, headers = {}) {
+    console.log(params)
     return service.delete(url, {
-      param,
+      params,
       headers: Object.assign({
         'Content-Type': 'multipart/form-data'
       }, headers)
     })
-  }
+  },
+  service
 }

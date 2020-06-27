@@ -21,7 +21,7 @@
           <el-table-column prop="address" label="操作" width="200">
             <template slot-scope="scope">
               <el-button type="text" size="small" v-if="scope.row.type!== 'add'" @click="handleEdit(scope.row)">编辑</el-button>
-              <el-button @click="handleClick(scope.row)" type="text" size="small">删除</el-button>
+              <el-button @click="delQA(scope.row)" type="text" size="small">删除</el-button>
             </template>
           </el-table-column>
         </el-table>
@@ -36,7 +36,7 @@
 </div>
 </template>
 <script>
-import { getQa } from '@/api/activity'
+import { getQa, delQa } from '@/api/activity'
 import addQa from './addQa'
 
 export default {
@@ -69,8 +69,13 @@ export default {
     async handleSave () {
       this.visible = false
     },
-    delQA (index) {
-      this.tasks.splice(index, 1)
+    async delQA (row) {
+      const id = row.id
+      console.log(row)
+      const res = await delQa({ id })
+      if (res.code === 200) {
+        this.refreshList()
+      }
     },
     handleEdit (row) {
       this.$refs.addQa.openDialog(row)

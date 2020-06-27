@@ -9,13 +9,13 @@
           <el-table-column prop="date" label="问题">
             <template slot-scope="scope">
               <template>
-                <img :src="url + scope.row" alt="" srcset="">
+                <img :src="url + scope.row.path" alt="" srcset="">
               </template>
             </template>
           </el-table-column>
           <el-table-column prop="address" label="操作" width="80">
             <template slot-scope="scope">
-              <el-button @click="handleClick(scope.row)" type="text" size="small">删除</el-button>
+              <el-button @click="handleDel(scope.row)" type="text" size="small">删除</el-button>
             </template>
           </el-table-column>
         </el-table>
@@ -30,7 +30,7 @@
 </div>
 </template>
 <script>
-import { getSwiper } from '@/api/activity'
+import { getSwiper, delImage } from '@/api/activity'
 import addSwiper from './addSwiper'
 import env from '@/utils/env'
 
@@ -65,8 +65,13 @@ export default {
     async handleSave () {
       this.visible = false
     },
-    delQA (index) {
-      this.tasks.splice(index, 1)
+    async handleDel (row) {
+      const id = row.id
+      console.log(row)
+      const res = await delImage({ id })
+      if (res.code === 200) {
+        this.refreshList()
+      }
     },
     handleEdit (row) {
       this.$refs.addSwiper.openDialog(row)

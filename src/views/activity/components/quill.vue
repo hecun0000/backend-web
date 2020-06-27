@@ -40,7 +40,8 @@ import 'quill/dist/quill.snow.css'
 import * as Quill from 'quill'
 // import getUpToken from '@/api/getUpToken'
 import { Loading } from 'element-ui'
-
+import { uploadFile } from '@/api/activity'
+import env from '@/utils/env'
 import { quillEditor } from 'vue-quill-editor'
 
 export default {
@@ -102,62 +103,40 @@ export default {
     },
     // 图片上传成功
     handleSuccess (res, file) {
-      Loading.service({}).close()
-      this.$message.success('图片上传成功')
-      this.imageUrl = res.domain + res.truekey
-      this.$emit('getImgUrl', this.imageUrl)
-      let vm = this
-      let url = this.imageUrl
-      if (url != null && url.length > 0) {
-        // 将文件上传后的URL地址插入到编辑器文本中
-        let value = url
-        // API: https://segmentfault.com/q/1010000008951906
-        // this.$refs.myTextEditor.quillEditor.getSelection();
-        // 获取光标位置对象，里面有两个属性，一个是index 还有 一个length，这里要用range.index，即当前光标之前的内容长度，然后再利用 insertEmbed(length, 'image', imageUrl)，插入图片即可。
-        vm.addRange = vm.$refs['Quill' + this.refId].quill.getSelection()
-        let index = vm.addRange !== null ? vm.addRange.index : 0
-        vm.$refs['Quill' + this.refId].quill.insertEmbed(
-          index,
-          'image',
-          value,
-          Quill.sources.USER
-        ) // 调用编辑器的 insertEmbed 方法，插入URL
-        vm.$refs['Quill' + this.refId].quill.setSelection(index + 1, 0)
-      } else {
-        this.$message.error(`${vm.uploadType}插入失败`)
-      }
-      this.$refs.upload.clearFiles() // 插入成功后清除input的内容
     },
     // 图片上传之前
-    beforeUpload (file) {
-      // Loading.service({ fullscreen: true, text: '图片上传中' })
-      // let splitArray = file.name.split('.')
-      // let current = moment()
-      //   .format('YYYYMMDD')
-      //   .toString()
-      // let prefix = moment(file.lastModified)
-      //   .format('HHmmss')
-      //   .toString()
-      // let suffix = new Date().getTime() + '.' + splitArray[splitArray.length - 1]
-      // let key = encodeURI(`${current}/${prefix}_${suffix}`)
-
-      // if (file.type.indexOf('image') == -1) {
-      //   Loading.service({}).close()
-      //   this.$message.error('请选择图片文件')
-      //   return false
-      // } else {
-      //   return getUpToken({ key })
-      //     .then(res => {
-      //       this.form = {
-      //         key: key,
-      //         token: res.data.uptoken
-      //       }
-      //     })
-      //     .catch(() => {
-      //       Loading.service({}).close()
-      //       this.$message.error('上传图片失败')
-      //     })
-      // }
+    async beforeUpload (file) {
+      Loading.service({ fullscreen: true, text: '图片上传中' })
+      const data = new FormData()
+      data.append('photo', file)
+      const res = await uploadFile(data)
+      console.log(res)
+      Loading.service({}).close()
+      if (res.code === 200) {
+        this.imageUrl = env.hostUrl + '/images/' + res.data.path
+        let url = this.imageUrl
+        let vm = this
+        if (url != null && url.length > 0) {
+        // 将文件上传后的URL地址插入到编辑器文本中
+          let value = url
+          // API: https://segmentfault.com/q/1010000008951906
+          // this.$refs.myTextEditor.quillEditor.getSelection();
+          // 获取光标位置对象，里面有两个属性，一个是index 还有 一个length，这里要用range.index，即当前光标之前的内容长度，然后再利用 insertEmbed(length, 'image', imageUrl)，插入图片即可。
+          vm.addRange = vm.$refs['Quill' + this.refId].quill.getSelection()
+          let index = vm.addRange !== null ? vm.addRange.index : 0
+          vm.$refs['Quill' + this.refId].quill.insertEmbed(
+            index,
+            'image',
+            value,
+            Quill.sources.USER
+          ) // 调用编辑器的 insertEmbed 方法，插入URL
+          vm.$refs['Quill' + this.refId].quill.setSelection(index + 1, 0)
+        } else {
+          this.$message.error(`${vm.uploadType}插入失败`)
+        }
+        this.$refs.upload.clearFiles() // 插入成功后清除input的内容
+        // this.$emit('getImgUrl', this.imageUrl)
+      }
     },
     // 图片上传失败
     handleError () {

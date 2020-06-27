@@ -72,9 +72,11 @@ export default {
     },
     openDialog (row) {
       this.visible = true
+      this.imageUrl = ''
     },
     handleCancel () {
       this.visible = false
+      this.imageUrl = ''
     },
     handleSave () {
       this.$emit('refresh')

@@ -14,7 +14,6 @@
         >
           <el-form-item prop="userName">
             <el-input
-              type="password"
               v-model="form.userName"
               autocomplete="off"
               placeholder="请输入用户名"
@@ -88,7 +87,10 @@ export default {
     submitForm (formName) {
       this.$refs.form.validate(valid => {
         if (valid) {
-          this.$router.push({ name: 'user' })
+          const { userName, passWord } = this.form
+          if (userName === 'admin' && passWord === '123456') {
+            this.$router.push({ name: 'user' })
+          }
         } else {
           console.log('error submit!!')
           return false

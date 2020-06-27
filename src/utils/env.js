@@ -6,13 +6,13 @@
  */
 
 const dev = {
-  hostUrl: 'http://118.24.22.88:8888/',
+  hostUrl: 'http://zdhcrh.natappfree.cc/',
   baseUrl: '/',
   routerMode: 'hash'
 }
 
 const prod = {
-  hostUrl: 'http://118.24.22.88:8888/',
+  hostUrl: 'http://zdhcrh.natappfree.cc/',
   baseUrl: '/api',
   routerMode: 'hash'
 }
