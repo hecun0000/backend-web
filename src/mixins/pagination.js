@@ -48,6 +48,7 @@ export default {
       const res = await this.listApi(data)
       this.loading = false
       this.tableData = res.data.records
+      this.total = res.data.total
     },
     /**
      *分页回调

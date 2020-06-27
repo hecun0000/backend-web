@@ -13,7 +13,6 @@
       </div>
       <div class="handle-right">
         <el-button type="primary" @click="handleAdd">新增</el-button>
-        <!-- <el-button type="danger">批量删除</el-button> -->
       </div>
     </div>
     <div class="table-box">
@@ -25,16 +24,22 @@
         style="width: 100%"
       >
         <el-table-column prop="title" label="活动名称"></el-table-column>
-        <el-table-column prop="endDate" label="活动时间"></el-table-column>
-        <el-table-column prop="type" label="活动类型"></el-table-column>
+        <el-table-column prop="endDate" label="结束时间"></el-table-column>
+        <el-table-column prop="type" label="活动类型">
+          <template slot-scope="scope">
+            {{ scope.row.type !== 'group' ? '助力' :'拼团' }}
+          </template>
+        </el-table-column>
         <el-table-column prop="teamCount" label="活动人数"></el-table-column>
         <el-table-column prop="activityPrice" label="价格"></el-table-column>
-        <el-table-column prop="detail" label="描述"></el-table-column>
+        <!-- <el-table-column prop="detail" label="描述"></el-table-column> -->
         <el-table-column label="操作">
           <template slot-scope="scope">
             <!-- <el-button type="text" @click="handleCheck(scope.row)">查看</el-button> -->
             <el-button type="text" @click="handleEdit(scope.row)">编辑</el-button>
-            <el-button type="text" @click="handleDel(scope.row)">删除</el-button>
+            <el-button type="text" @click="handleSwiper(scope.row)">设置轮播图</el-button>
+            <el-button type="text" @click="handleQa(scope.row)">添加问答</el-button>
+            <!-- <el-button type="text" @click="handleDel(scope.row)">删除</el-button> -->
           </template>
         </el-table-column>
       </el-table>
@@ -50,18 +55,20 @@
       />
     </div>
     <product-dialog ref='ProductDialog'/>
+    <swiper-dialog  ref="swiperDialog"/>
+    <qa-dialog ref="qaDialog"/>
   </div>
 </template>
 
 <script>
 import { pagination } from '@/mixins'
 import { getActivityList } from '@/api/activity'
-import { ProductDialog } from './components'
+import { ProductDialog, swiperDialog, qaDialog } from './components'
 
 export default {
   name: 'Role',
   components: {
-    ProductDialog
+    ProductDialog, swiperDialog, qaDialog
   },
   mixins: [pagination], // 封装分页相关函数
   data () {
@@ -91,6 +98,12 @@ export default {
     },
     handleCheck (row) {
       this.$refs.ProductDialog.openDialog(row, 'check')
+    },
+    handleSwiper (row) {
+      this.$refs.swiperDialog.openDialog(row)
+    },
+    handleQa (row) {
+      this.$refs.qaDialog.openDialog(row)
     },
     handleDel () {
 

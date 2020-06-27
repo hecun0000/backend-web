@@ -9,9 +9,6 @@
         <el-form-item label="活动封面" prop="region">
           <upload @getImgUrl="getImgUrl"></upload>
         </el-form-item>
-        <el-form-item label="轮播图" prop="region">
-          <uploadImgs @getPics="getPics"></uploadImgs>
-        </el-form-item>
         <el-form-item label="活动时间" prop="delivery">
           <el-date-picker
             v-model="form.time"
@@ -23,39 +20,20 @@
         </el-form-item>
         <el-form-item label="活动类型" prop="type">
           <el-radio-group v-model="form.type">
-            <el-radio label="拼团"></el-radio>
-            <el-radio label="助力"></el-radio>
+            <el-radio label="拼团" value="group"></el-radio>
+            <el-radio label="助力" value="share"></el-radio>
           </el-radio-group>
         </el-form-item>
         <el-form-item label="原价" prop="original_price">
-          <el-input-number v-model="form.original_price" label="原价"></el-input-number>
+          <el-input-number v-model="form.originalPrice" label="原价"></el-input-number>
         </el-form-item>
         <el-form-item label="现价" prop="type">
-          <el-input-number v-model="form.activity_price" label="现价"></el-input-number>
+          <el-input-number v-model="form.activityPrice" label="现价"></el-input-number>
         </el-form-item>
-        <el-form-item label="成团人数" prop="desc">
-          <el-input-number v-model="form.team_count" label="成团人数"></el-input-number>
+        <el-form-item label="成团人数" prop="desc" v-if="form.type === 'group'">
+          <el-input-number v-model="form.teamCount" label="成团人数"></el-input-number>
         </el-form-item>
 
-        <el-form-item label="讨论问答" prop="desc">
-          <el-button type="primary" @click="addQA">添加问答</el-button>
-          <ul class="task-box">
-            <li class="task-item" v-for="(item, index) of form.tasks" :key="index">
-              <div class="item-box">
-                <div class="left">
-
-              <div class="task-item-q">
-                <el-input v-model="item.q" placeholder="请输入问题"></el-input>
-              </div>
-              <el-input type="textarea" v-model="item.a" placeholder="请输入回答"></el-input>
-                </div>
-                <div class="right">
-                  <el-button @click="delQA(index)">删除</el-button>
-                </div>
-              </div>
-            </li>
-          </ul>
-        </el-form-item>
           <el-form-item label="活动详情" prop="desc">
           <quill @getEditorHtml="getEditorHtml" />
         </el-form-item>
@@ -72,49 +50,35 @@
 </template>
 <script>
 import quill from './components/quill'
-import uploadImgs from './components/uploadImgs'
+// import uploadImgs from './components/uploadImgs'
 import { addActivity, editActivity } from '@/api/activity'
 import { deepCopy } from '@/utils/tools'
 export default {
   name: 'ProductDialog',
   components: {
-    quill,
-    uploadImgs
+    quill
+    // uploadImgs
   },
   data () {
     return {
       title: '编辑角色',
       visible: false,
       form: {
-        tasks: [
-          {
-            q: '这个课程怎么样',
-            a: '好不错'
-          },
-
-          {
-            q: '这个课程怎么样',
-            a: '好不错'
-          }
-
-        ],
+        headImg: '',
         title: '',
         time: [],
         type: '',
-        original_price: 0,
-        activity_price: 0,
-        team_count: 0,
+        originalPrice: 0,
+        activityPrice: 0,
+        teamCount: 0,
         detail: ''
       },
       rules: {
-        title: [{ required: true, message: '请输入活动名称', trigger: 'blur' }],
-        region: [
-          { required: true, message: '请选择活动区域', trigger: 'change' }
-        ],
-        resource: [
-          { required: true, message: '请选择活动资源', trigger: 'change' }
-        ],
-        detail: [{ required: true, message: '请填写活动详情', trigger: 'blur' }]
+        title: [{ required: true, message: '请输入活动名称', trigger: 'blur' }]
+        // originalPrice: [{ required: true, message: '请输入活动名称', trigger: 'blur' }],
+        // title: [{ required: true, message: '请输入活动名称', trigger: 'blur' }],
+        // title: [{ required: true, message: '请输入活动名称', trigger: 'blur' }],
+
       }
     }
   },
@@ -122,21 +86,9 @@ export default {
     this.init()
   },
   methods: {
-    delQA (index) {
-      this.form.tasks.splice(index, 1)
-    },
-    addQA () {
-      this.form.tasks.push({
-        q: '',
-        a: ''
-      })
-    },
-    getPics (pics) {
-      console.log(pics)
-    },
     getImgUrl (url) {
       console.log(url)
-      this.form.cover = url
+      this.form.headImg = url
     },
     handleRemove (file, fileList) {
       console.log(file, fileList)
@@ -165,15 +117,9 @@ export default {
       this.$router.push('activity')
     },
     async handleSave () {
-      // this.$refs.Form.validate(valid => {
-      //   if (valid) {
-
-      //   } else {
-      //     console.log('error submit!!')
-      //     return false
-      //   }
-      // })
       const data = deepCopy(this.form)
+      data.startTime = this.form.time[0]
+      data.endTime = this.form.time[1]
       let res
       if (this.$route.query && this.$route.query.id) {
         data.id = this.$route.query.id
@@ -184,7 +130,7 @@ export default {
 
       if (res.code === 200) {
         this.$message.success('操作成功')
-        this.$router.push('activity')
+        this.$router.push('/activity')
       }
     }
   }

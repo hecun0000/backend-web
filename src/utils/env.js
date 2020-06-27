@@ -12,7 +12,9 @@ const dev = {
 }
 
 const prod = {
-  ...dev
+  hostUrl: 'http://118.24.22.88:8888/',
+  baseUrl: '/api',
+  routerMode: 'hash'
 }
 
 export default process.env.NODE_ENV === 'development' ? dev : prod
