@@ -24,7 +24,7 @@ module.exports = {
     port: 8080, // 端口地址
     https: false, // 使用https提供服务
     // 这里写你调用接口的基础路径，来解决跨域，如果设置了代理，那你本地开发环境的axios的baseUrl要写为 '' ，即空字符串
-    proxy: 'http://zdhcrh.natappfree.cc/'
+    proxy: 'http://39.97.251.196:8888/'
   },
 
   chainWebpack: (config) => {
