@@ -8,14 +8,15 @@
         :data="tableData"
         tooltip-effect="dark"
         style="width: 100%"
-        :height="500"
       >
         <el-table-column prop="amount" label="金额"></el-table-column>
         <el-table-column prop="couponCode" label="核销码"></el-table-column>
-        <el-table-column prop="expireDate" label="过期事件"></el-table-column>
+        <el-table-column prop="expireDate" label="过期时间"></el-table-column>
         <el-table-column label="操作">
           <template slot-scope="scope">
-            <el-button type="text" @click="handleCheck(scope.row)">核销</el-button>
+            {{ scope.row.vaild }}
+            <el-button type="text" v-if="!scope.row.vaild" @click="handleCheck(scope.row)">核销</el-button>
+            <span v-else>---</span>
           </template>
         </el-table-column>
       </el-table>
@@ -65,7 +66,7 @@ export default {
     openDialog (row) {
       this.visible = true
       this.title = row.nickName + '的优惠券'
-      this.openId = row.openid
+      this.openId = row.openId
       this.getCouponList(this.openId)
     },
     async getCouponList (id) {
@@ -76,6 +77,7 @@ export default {
     },
     handleCancel () {
       this.visible = false
+      this.openId = ''
       this.tableData = []
     }
   }

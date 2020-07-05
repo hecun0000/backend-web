@@ -2,14 +2,14 @@
   <div class="page-container">
     <div class="page-title">{{ title }}</div>
     <div class="dialog-body">
-      <el-form :model="form" :rules="rules" ref="Form" label-width="100px" class="demo-ruleForm">
-        <el-form-item label="活动名称" prop="name">
+      <el-form :model="form" :rules="rules" ref="Form" label-width="140px" class="demo-ruleForm">
+        <el-form-item label="活动名称" prop="title">
           <el-input v-model="form.title"></el-input>
         </el-form-item>
-        <el-form-item label="活动封面" prop="region">
+        <el-form-item label="活动封面" prop="headImg">
           <upload @getImgUrl="getImgUrl" ref="upload"></upload>
         </el-form-item>
-        <el-form-item label="活动时间" prop="delivery">
+        <el-form-item label="请选择活动结束时间" prop="delivery">
           <el-date-picker
             v-model="form.endDate"
             type="datetime"
@@ -18,22 +18,44 @@
           ></el-date-picker>
         </el-form-item>
         <el-form-item label="活动类型" prop="type">
-          <el-radio-group v-model="form.type">
+          <el-radio-group v-model="form.type" @change="handleChange">
             <el-radio label="group">拼团</el-radio>
             <el-radio label="share">助力</el-radio>
           </el-radio-group>
         </el-form-item>
-        <el-form-item label="原价" prop="original_price">
+        <el-form-item label="原价" prop="originalPrice">
           <el-input-number v-model="form.originalPrice" :precision="2"  label="原价"></el-input-number>
         </el-form-item>
-        <el-form-item label="现价">
+        <el-form-item label="现价" prop="activityPrice">
           <el-input-number v-model="form.activityPrice" :precision="2"  label="现价"></el-input-number>
         </el-form-item>
         <el-form-item label="成团人数" v-if="form.type === 'group'">
           <el-input-number v-model="form.teamCount" label="成团人数"></el-input-number>
         </el-form-item>
 
-        <el-form-item label="活动详情" prop="desc">
+        <el-form-item label="优惠券发放规则" prop="actSetting" v-if="form.type">
+          <template v-if="form.type === 'group'">
+            <!-- 拼团 -->
+            拼团成功后， 每人发放
+            <el-input-number v-model="form.actSetting" :precision="2"  label="金额"></el-input-number>
+            元优惠券
+          </template>
+          <template v-else>
+            <ul>
+              <li v-for="(item, index) in form.actSetting" :key="index">
+                当人数达到
+                <el-input-number v-model="item.number" label="人数"></el-input-number>
+                发放
+                <el-input-number v-model="item.actSetting" label="金额"></el-input-number>
+                元优惠券
+                <el-button type="text" @click="handleAdd">添加</el-button>
+                <el-button type="text" @click="handleDel">删除</el-button>
+              </li>
+            </ul>
+          </template>
+        </el-form-item>
+
+        <el-form-item label="活动详情" prop="detail">
           <quill @getEditorHtml="getEditorHtml" :editDetail="editDetail" />
         </el-form-item>
         <el-form-item>
@@ -69,12 +91,17 @@ export default {
         originalPrice: 0,
         activityPrice: 0,
         teamCount: 0,
-        detail: ''
+        detail: '',
+        actSetting: ''
       },
       editDetail: '',
       rules: {
-        title: [{ required: true, message: '请输入活动名称', trigger: 'blur' }]
-        // originalPrice: [{ required: true, message: '请输入活动名称', trigger: 'blur' }],
+        title: [{ required: true, message: '请输入活动名称', trigger: 'blur' }],
+        headImg: [{ required: true, message: '请上传活动封面', trigger: 'blur' }],
+        endDate: [{ required: true, message: '请选择活动结束时间', trigger: 'blur' }],
+        type: [{ required: true, message: '请选择活动类型', trigger: 'blur' }],
+        originalPrice: [{ required: true, message: '请输入原价', trigger: 'blur' }],
+        activityPrice: [{ required: true, message: '请输入现价', trigger: 'blur' }]
         // title: [{ required: true, message: '请输入活动名称', trigger: 'blur' }],
         // title: [{ required: true, message: '请输入活动名称', trigger: 'blur' }],
       }
@@ -89,12 +116,45 @@ export default {
     }
   },
   methods: {
+    handleAdd () {
+      this.form.actSetting.push({
+        number: '',
+        actSetting: ''
+      })
+    },
+    handleChange () {
+      if (this.form.type === 'group') {
+        this.form.actSetting = ''
+      } else {
+        const result = []
+        result.push({
+          number: '',
+          actSetting: ''
+        })
+        this.form.actSetting = result
+      }
+    },
     async getDetail (id) {
       const res = await getAtivityById(id)
       if (res.code === 200) {
         this.form = res.data
         this.editDetail = res.data.detail
         this.$refs.upload.imageUrl = res.data.headImg
+
+        if (res.data.actSetting) {
+          if (this.form.type === 'group') {
+            this.form.actSetting = res.data.actSetting
+          } else {
+            const result = []
+            Object.keys(res.data.actSetting).map(item => {
+              result.push({
+                number: item,
+                actSetting: res.data.actSetting[item]
+              })
+            })
+            this.form.actSetting = result
+          }
+        }
       }
     },
     getImgUrl (url) {
@@ -128,19 +188,26 @@ export default {
       this.$router.push('/activity')
     },
     async handleSave () {
-      const data = deepCopy(this.form)
-      let res
-      if (this.$route.query && this.$route.query.id) {
-        data.id = this.$route.query.id
-        res = await editActivity(data)
-      } else {
-        res = await addActivity(data)
-      }
+      this.$refs.Form.validate(async (valid) => {
+        if (valid) {
+          const data = deepCopy(this.form)
+          let res
+          if (this.$route.query && this.$route.query.id) {
+            data.id = this.$route.query.id
+            res = await editActivity(data)
+          } else {
+            res = await addActivity(data)
+          }
 
-      if (res.code === 200) {
-        this.$message.success('操作成功')
-        this.$router.push('/activity')
-      }
+          if (res.code === 200) {
+            this.$message.success('操作成功')
+            this.$router.push('/activity')
+          }
+        } else {
+          console.log('error submit!!')
+          return false
+        }
+      })
     }
   }
 }

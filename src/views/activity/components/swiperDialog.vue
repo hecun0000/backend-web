@@ -9,7 +9,7 @@
           <el-table-column prop="date" label="问题">
             <template slot-scope="scope">
               <template>
-                <img :src="url + scope.row.path" alt="" srcset="">
+                <img :src="url + scope.row.path" alt="" srcset="" style="height: 120px;">
               </template>
             </template>
           </el-table-column>

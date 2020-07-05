@@ -101,8 +101,8 @@ export default {
     handleAdd () {
       this.$refs.ProductDialog.openDialog()
     },
-    handleCheck ({ id }) {
-      this.$refs.couponDialog.openDialog(id)
+    handleCheck (row) {
+      this.$refs.couponDialog.openDialog(row)
     }
   }
 }

@@ -23,6 +23,7 @@
         tooltip-effect="dark"
         style="width: 100%"
       >
+        <el-table-column prop="id" label="id"></el-table-column>
         <el-table-column prop="title" label="活动名称"></el-table-column>
         <el-table-column prop="endDate" label="结束时间"></el-table-column>
         <el-table-column prop="type" label="活动类型">
