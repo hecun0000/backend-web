@@ -35,10 +35,12 @@
           </template>
         </el-table-column>
         <el-table-column prop="nickName" label="昵称"></el-table-column>
+        <el-table-column prop="name" label="姓名"></el-table-column>
+        <el-table-column prop="grade" label="年级"></el-table-column>
         <el-table-column prop="phone" label="手机号"></el-table-column>
         <el-table-column label="性别">
           <template slot-scope="scope">
-            {{ scope.row.gender===1?"男":'女' }}
+            {{ scope.row.gender }}
           </template>
         </el-table-column>
         <el-table-column label="操作" width="150">
@@ -64,6 +66,7 @@
 </template>
 
 <script>
+
 import { pagination } from '@/mixins'
 import { getUserList } from '@/api/user'
 import { ProductDialog, couponDialog } from './components'

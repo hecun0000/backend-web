@@ -8,12 +8,12 @@
 -->
 <template>
   <div class="role common-table">
-    <div class="code-box">
+    <!-- <div class="code-box">
       <div>
         <el-input class="code-input" v-model="code" placeholder="请输入核销码"></el-input>
         <el-button type="primary" @click="handleCode">核销</el-button>
       </div>
-    </div>
+    </div> -->
     <div class="handbox">
       <el-form :inline="true" :model="searchForm" class="demo-form-inline">
         <el-form-item label="手机号">
@@ -22,9 +22,9 @@
         <el-form-item label="昵称">
           <el-input v-model="searchForm.nickname" placeholder="请输入昵称"></el-input>
         </el-form-item>
-        <el-form-item label="订单号">
+        <!-- <el-form-item label="订单号">
           <el-input v-model="searchForm.id" placeholder="请输入订单号"></el-input>
-        </el-form-item>
+        </el-form-item> -->
         <el-form-item>
           <el-button type="primary" @click="onSubmit">查询</el-button>
         </el-form-item>

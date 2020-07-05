@@ -24,10 +24,10 @@
           </el-radio-group>
         </el-form-item>
         <el-form-item label="原价" prop="original_price">
-          <el-input-number v-model="form.originalPrice" label="原价"></el-input-number>
+          <el-input-number v-model="form.originalPrice" :precision="2"  label="原价"></el-input-number>
         </el-form-item>
         <el-form-item label="现价">
-          <el-input-number v-model="form.activityPrice" label="现价"></el-input-number>
+          <el-input-number v-model="form.activityPrice" :precision="2"  label="现价"></el-input-number>
         </el-form-item>
         <el-form-item label="成团人数" v-if="form.type === 'group'">
           <el-input-number v-model="form.teamCount" label="成团人数"></el-input-number>
@@ -125,7 +125,7 @@ export default {
       }
     },
     handleCancel () {
-      this.$router.push('activity')
+      this.$router.push('/activity')
     },
     async handleSave () {
       const data = deepCopy(this.form)

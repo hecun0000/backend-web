@@ -18,3 +18,5 @@ export function logout () {
 }
 
 export const getUserList = data => request.get('/user-info/page', data)
+export const getCouponById = id => request.get('/coupon/' + id)
+export const couponWirte = data => request.put('/coupon/writeoff', data)

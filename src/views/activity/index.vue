@@ -39,7 +39,7 @@
             <el-button type="text" @click="handleEdit(scope.row)">编辑</el-button>
             <el-button type="text" @click="handleSwiper(scope.row)">设置轮播图</el-button>
             <el-button type="text" @click="handleQa(scope.row)">添加问答</el-button>
-            <!-- <el-button type="text" @click="handleDel(scope.row)">删除</el-button> -->
+            <el-button type="text" @click="handleDel(scope.row)">删除</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -62,7 +62,7 @@
 
 <script>
 import { pagination } from '@/mixins'
-import { getActivityList } from '@/api/activity'
+import { getActivityList, delActivity } from '@/api/activity'
 import { ProductDialog, swiperDialog, qaDialog } from './components'
 
 export default {
@@ -82,6 +82,26 @@ export default {
     this.getListData()
   },
   methods: {
+    handleDel ({ id }) {
+      this.$confirm('此操作将删除该活动吗, 是否继续?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        delActivity({ id }).then(() => {
+          this.refresh()
+          this.$message({
+            type: 'success',
+            message: '删除成功!'
+          })
+        })
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '已取消删除'
+        })
+      })
+    },
     onSubmit () {
       console.log('搜索')
       this.refresh()
@@ -104,9 +124,6 @@ export default {
     },
     handleQa (row) {
       this.$refs.qaDialog.openDialog(row)
-    },
-    handleDel () {
-
     }
   }
 }

@@ -10,9 +10,14 @@
         style="width: 100%"
         :height="500"
       >
-        <el-table-column prop="id" label="id"></el-table-column>
         <el-table-column prop="amount" label="金额"></el-table-column>
-        <el-table-column prop="coupon_code" label="核销码"></el-table-column>
+        <el-table-column prop="couponCode" label="核销码"></el-table-column>
+        <el-table-column prop="expireDate" label="过期事件"></el-table-column>
+        <el-table-column label="操作">
+          <template slot-scope="scope">
+            <el-button type="text" @click="handleCheck(scope.row)">核销</el-button>
+          </template>
+        </el-table-column>
       </el-table>
       </div>
       <div class="dialog-footer">
@@ -22,7 +27,7 @@
   </div>
 </template>
 <script>
-import { getCouponById } from '@/api/coupon'
+import { getCouponById, couponWirte } from '@/api/user'
 export default {
   name: 'ProductDialog',
   data () {
@@ -33,10 +38,35 @@ export default {
     }
   },
   methods: {
-    openDialog (id) {
+    handleCheck (row) {
+      this.$confirm('确认核销优惠券吗?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        const { couponCode } = row
+        couponWirte({
+          userId: this.openId,
+          couponCode
+        }).then(_ => {
+          this.getCouponList(this.openId)
+          this.$message({
+            type: 'success',
+            message: '核销成功!'
+          })
+        })
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '取消核销!'
+        })
+      })
+    },
+    openDialog (row) {
       this.visible = true
-      this.title = '查看优惠券'
-      this.getCouponList(id)
+      this.title = row.nickName + '的优惠券'
+      this.openId = row.openid
+      this.getCouponList(this.openId)
     },
     async getCouponList (id) {
       const res = await getCouponById(id)
