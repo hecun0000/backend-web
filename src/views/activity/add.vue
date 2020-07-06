@@ -9,7 +9,7 @@
         <el-form-item label="活动封面" prop="headImg">
           <upload @getImgUrl="getImgUrl" ref="upload"></upload>
         </el-form-item>
-        <el-form-item label="请选择活动结束时间" prop="delivery">
+        <el-form-item label="活动结束时间" prop="endDate">
           <el-date-picker
             v-model="form.endDate"
             type="datetime"
@@ -42,14 +42,14 @@
           </template>
           <template v-else>
             <ul>
-              <li v-for="(item, index) in form.actSetting" :key="index">
+              <li v-for="(item, index) in form.actSetting" :key="index" class="actSetting-item">
                 当人数达到
                 <el-input-number v-model="item.number" label="人数"></el-input-number>
                 发放
                 <el-input-number v-model="item.actSetting" label="金额"></el-input-number>
                 元优惠券
                 <el-button type="text" @click="handleAdd">添加</el-button>
-                <el-button type="text" @click="handleDel">删除</el-button>
+                <el-button type="text" v-if="index > 0" @click="handleDel(index)">删除</el-button>
               </li>
             </ul>
           </template>
@@ -102,8 +102,6 @@ export default {
         type: [{ required: true, message: '请选择活动类型', trigger: 'blur' }],
         originalPrice: [{ required: true, message: '请输入原价', trigger: 'blur' }],
         activityPrice: [{ required: true, message: '请输入现价', trigger: 'blur' }]
-        // title: [{ required: true, message: '请输入活动名称', trigger: 'blur' }],
-        // title: [{ required: true, message: '请输入活动名称', trigger: 'blur' }],
       }
     }
   },
@@ -116,6 +114,9 @@ export default {
     }
   },
   methods: {
+    handleDel (index) {
+      this.form.actSetting.splice(index, 1)
+    },
     handleAdd () {
       this.form.actSetting.push({
         number: '',
@@ -146,10 +147,12 @@ export default {
             this.form.actSetting = res.data.actSetting
           } else {
             const result = []
-            Object.keys(res.data.actSetting).map(item => {
+            const actSetting = JSON.parse(res.data.actSetting)
+            Object.keys(actSetting).map(item => {
+              console.log(actSetting[item])
               result.push({
                 number: item,
-                actSetting: res.data.actSetting[item]
+                actSetting: actSetting[item]
               })
             })
             this.form.actSetting = result
@@ -192,6 +195,14 @@ export default {
         if (valid) {
           const data = deepCopy(this.form)
           let res
+          if (data.actSetting.length > 0) {
+            const actSetting = {}
+            data.actSetting.map(item => {
+              actSetting[item.number] = item.actSetting
+            })
+            data.actSetting = JSON.stringify(actSetting)
+          }
+
           if (this.$route.query && this.$route.query.id) {
             data.id = this.$route.query.id
             res = await editActivity(data)
@@ -241,5 +252,9 @@ export default {
     width: 600px;
     margin-right: 20px;
   }
+}
+
+.actSetting-item {
+  margin-bottom: 10px;
 }
 </style>

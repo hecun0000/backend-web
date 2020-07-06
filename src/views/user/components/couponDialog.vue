@@ -8,6 +8,7 @@
         :data="tableData"
         tooltip-effect="dark"
         style="width: 100%"
+        height="500"
       >
         <el-table-column prop="amount" label="金额"></el-table-column>
         <el-table-column prop="couponCode" label="核销码"></el-table-column>
