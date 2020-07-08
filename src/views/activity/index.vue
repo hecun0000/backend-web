@@ -2,14 +2,14 @@
   <div class="role common-table">
     <div class="handle-box">
       <div class="handle-left">
-        <el-form :inline="true" :model="searchForm" class="demo-form-inline">
+        <!-- <el-form :inline="true" :model="searchForm" class="demo-form-inline">
         <el-form-item label="活动名称">
-          <el-input v-model="searchForm.user" placeholder="请输入活动名称"></el-input>
+          <el-input v-model="searchForm.title" placeholder="请输入活动名称"></el-input>
         </el-form-item>
         <el-form-item>
           <el-button type="primary" @click="onSubmit">查询</el-button>
         </el-form-item>
-        </el-form>
+        </el-form> -->
       </div>
       <div class="handle-right">
         <el-button type="primary" @click="handleAdd">新增</el-button>

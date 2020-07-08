@@ -15,8 +15,7 @@
         <el-table-column prop="expireDate" label="过期时间"></el-table-column>
         <el-table-column label="操作">
           <template slot-scope="scope">
-            {{ scope.row.vaild }}
-            <el-button type="text" v-if="!scope.row.vaild" @click="handleCheck(scope.row)">核销</el-button>
+            <el-button type="text" v-if="scope.row.valid" @click="handleCheck(scope.row)">核销</el-button>
             <span v-else>---</span>
           </template>
         </el-table-column>

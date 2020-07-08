@@ -39,20 +39,26 @@
         style="width: 100%"
       >
         <el-table-column type="selection" width="55"></el-table-column>
+        <el-table-column prop="id" label="订单号"></el-table-column>
+        <el-table-column prop="title" label="活动标题"></el-table-column>
+        <el-table-column prop="headImg" label="活动封面">
+          <template slot-scope="scope">
+            <img :src="scope.row.headImg" alt="" class="avatar">
+          </template>
+        </el-table-column>
         <el-table-column prop="avatar" label="头像">
           <template slot-scope="scope">
             <img :src="scope.row.avatarUrl" alt="" class="avatar">
           </template>
         </el-table-column>
-        <el-table-column prop="id" label="订单号"></el-table-column>
         <!-- <el-table-column prop="orderNum" label="核销码"></el-table-column> -->
-        <el-table-column prop="nickname" label="昵称"></el-table-column>
+        <el-table-column prop="nickName" label="昵称"></el-table-column>
         <el-table-column prop="phone" label="手机号"></el-table-column>
-        <el-table-column label="操作">
+        <!-- <el-table-column label="操作">
           <template slot-scope="scope">
             <el-button type="text" @click="handleCheck(scope.row)">查看成员</el-button>
           </template>
-        </el-table-column>
+        </el-table-column> -->
       </el-table>
     </div>
     <div class="pagination">
